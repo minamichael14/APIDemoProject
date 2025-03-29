@@ -21,7 +21,7 @@ public class WeatherForecastController : ControllerBase
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
-    [CustomResult]
+    [CustomResponseHeader]
     [Authorize]
     public IEnumerable<WeatherForecast> Get()
     {

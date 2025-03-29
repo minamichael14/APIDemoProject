@@ -8,6 +8,7 @@ namespace APIDay1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [CustomResponseHeader]
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _studentService;
@@ -17,7 +18,8 @@ namespace APIDay1.Controllers
         }
 
         [HttpGet]
-        [CustomAuthorize("Student")]
+        [Authorize(Roles = "Student,Admin")]
+
         public IActionResult GetAll()
         {
             return Ok(_studentService.GetAll());
@@ -25,7 +27,7 @@ namespace APIDay1.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        [CustomAuthorize("Student")]
+        [Authorize(Roles ="Student")]
         public IActionResult GetByID(int id)
         {
             var student = _studentService.GetByID(id);
@@ -38,7 +40,8 @@ namespace APIDay1.Controllers
 
         [HttpGet]
         [Route("{name:alpha}")]
-        [CustomAuthorize("Student")]
+        [Authorize(Roles = "Student")]
+
         public IActionResult GetByName(string name)
         {
             var student = _studentService.GetByName(name);
@@ -50,7 +53,7 @@ namespace APIDay1.Controllers
         }
 
         [HttpPost]
-        [CustomAuthorize("Admin")]
+        [Authorize(Roles = "Student,Admin")]
         public IActionResult AddStudent(Student student)
         {
             var id = _studentService.Add(student);
@@ -58,8 +61,8 @@ namespace APIDay1.Controllers
         }
 
         [HttpPut]
-        [CustomAuthorize("Admin")]
-        [CustomAuthorize("Student")]
+        [Authorize(Roles = "Admin")]
+
         public IActionResult UpdateStudent(Student student)
         {
             _studentService.Update(student);
@@ -67,7 +70,7 @@ namespace APIDay1.Controllers
         }
 
         [HttpDelete]
-        [CustomAuthorize("Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             var isExist = _studentService.Delete(id);

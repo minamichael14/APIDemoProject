@@ -2,7 +2,7 @@
 
 namespace APIDay1.Filters
 {
-    public class CustomResult : ResultFilterAttribute
+    public class CustomResponseHeader : ResultFilterAttribute
     {
         public override void OnResultExecuting(ResultExecutingContext context)
         {

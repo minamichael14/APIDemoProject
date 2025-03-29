@@ -3,6 +3,7 @@ using APIDay1.Data;
 using APIDay1.Middelwares;
 using APIDay1.Repository;
 using APIDay1.Services;
+using APIDemoProject.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -46,22 +47,26 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 );
 
 
-
-builder.Services.AddAuthentication(options =>
+var key = Encoding.UTF8.GetBytes(Constants.SecretKey);
+builder.Services.AddAuthentication(opts =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(opts =>
 {
     opts.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
     {
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("3eejjd46bfro83bhf8@fmr3$#cmdl18mkd")),
-        ValidIssuer = "issuer",
-        ValidateIssuer = true
+        ValidIssuer = Constants.JWTIssuer,
+        ValidateIssuer = true,
+
+        ValidAudience = Constants.JWTAudience,
+        ValidateAudience = true,
+
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuerSigningKey = true,
+
+        ValidateLifetime = true
     };
 });
-
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
